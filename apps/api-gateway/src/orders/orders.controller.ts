@@ -1,0 +1,17 @@
+import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { MICROSERVICES_CLIENTS } from '../constants';
+import { ClientProxy } from '@nestjs/microservices';
+
+@Controller('orders')
+export class OrdersController {
+  constructor(
+    @Inject(MICROSERVICES_CLIENTS.ORDERS_SERVICE)
+    private ordersServiceClient: ClientProxy
+  ) {}
+
+  @Post()
+  createOrder(@Body() order: any) {
+    console.log('CREATE ORDER API HIT ON API GATEWAY');
+    return this.ordersServiceClient.send('create-order', order);
+  }
+}
