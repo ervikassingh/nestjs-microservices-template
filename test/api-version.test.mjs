@@ -1,5 +1,5 @@
 /**
- * Reproduction test for the vendor update: @nestjs/common 11.1.3 -> 12.6.0.
+ * Reproduction test for the vendor update: @nestjs/common 11.1.3 -> 12.6.2.
  *
  * Runs with the repository's own test command (`npm test`, wired below) using
  * node:test, which is built into Node, plus the already-installed
@@ -12,16 +12,25 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { test } from 'node:test';
 
-test('@nestjs/common is on major v12 and its call-site decorators keep their contract', async () => {
-  // 1. The vendor pin: the installed package must be major 12.
-  //    On the pre-fix code (@nestjs/common 11.1.3) this assertion fails.
+const MINIMUM_VERSION = [12, 6, 2];
+
+function isAtLeast(version, minimum) {
+  const actual = version.split('-')[0].split('.').map(Number);
+  for (let i = 0; i < minimum.length; i += 1) {
+    if ((actual[i] ?? 0) > minimum[i]) return true;
+    if ((actual[i] ?? 0) < minimum[i]) return false;
+  }
+  return true;
+}
+
+test('@nestjs/common is at least v12.6.2 and its call-site decorators keep their contract', async () => {
+  // 1. The vendor pin: the installed package must be v12.6.2 or newer.
+  //    On the pre-fix code (@nestjs/common 11.1.3/12.6.0) this assertion fails.
   const require = createRequire(import.meta.url);
   const { version } = require('@nestjs/common/package.json');
-  const major = Number(version.split('.')[0]);
-  assert.equal(
-    major,
-    12,
-    `@nestjs/common must be on major v12 per the vendor update, installed: ${version}`
+  assert.ok(
+    isAtLeast(version, MINIMUM_VERSION),
+    `@nestjs/common must be >= 12.6.2 per the vendor update, installed: ${version}`
   );
 
   // 2. Guard the behaviour that must not change: every @nestjs/common export
