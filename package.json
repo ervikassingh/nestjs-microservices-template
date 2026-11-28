@@ -2,7 +2,9 @@
   "name": "@nest-microservices/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "test": "node --test test/api-version.test.mjs test/route-conflict-case-sensitivity.test.mjs"
+  },
   "private": true,
   "devDependencies": {
     "@nestjs/schematics": "^10.0.1",
@@ -29,9 +31,9 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.13.4",
     "@grpc/proto-loader": "^0.7.15",
-    "@nestjs/common": "^11.1.3",
-    "@nestjs/core": "^11.1.3",
-    "@nestjs/microservices": "^11.1.3",
+    "@nestjs/common": "^12.6.2",
+    "@nestjs/core": "^12.6.3",
+    "@nestjs/microservices": "^12.6.3",
     "@nestjs/platform-express": "^11.1.3",
     "axios": "^1.6.0",
     "ioredis": "^5.6.1",
