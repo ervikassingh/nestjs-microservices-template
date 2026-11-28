@@ -1,8 +1,8 @@
 /**
  * Reproduction test for the vendor updates:
  *   @nestjs/common 11.1.3 -> 12.6.2
- *   @nestjs/core 11.1.3 -> 12.6.2
- *   @nestjs/microservices 11.1.3 -> 12.6.2
+ *   @nestjs/core 11.1.3 -> 12.6.3
+ *   @nestjs/microservices 11.1.3 -> 12.6.3
  *
  * Runs with the repository's own test command (`npm test`, wired below) using
  * node:test, which is built into Node, plus the already-installed
@@ -15,6 +15,8 @@ import { createRequire } from 'node:module';
 import { test } from 'node:test';
 
 const MINIMUM_VERSION = [12, 6, 2];
+// @nestjs/core and @nestjs/microservices moved on to 12.6.3 on their own.
+const CORE_MINIMUM_VERSION = [12, 6, 3];
 
 function isAtLeast(version, minimum) {
   const actual = version.split('-')[0].split('.').map(Number);
@@ -96,15 +98,15 @@ test('@nestjs/common is at least v12.6.2 and its call-site decorators keep their
   assert.ok(new common.Logger('synthetic'), 'Logger must still be constructible');
 });
 
-test('@nestjs/core and @nestjs/microservices are at least v12.6.2 and keep their call-site contracts', async () => {
-  // 1. The vendor pins: both installed packages must be v12.6.2 or newer.
-  //    On the pre-fix code (12.6.0) these assertions fail.
+test('@nestjs/core and @nestjs/microservices are at least v12.6.3 and keep their call-site contracts', async () => {
+  // 1. The vendor pins: both installed packages must be v12.6.3 or newer.
+  //    On the pre-fix code (12.6.2) these assertions fail.
   const require = createRequire(import.meta.url);
   for (const pkg of ['@nestjs/core', '@nestjs/microservices']) {
     const { version } = require(`${pkg}/package.json`);
     assert.ok(
-      isAtLeast(version, MINIMUM_VERSION),
-      `${pkg} must be >= 12.6.2 per the vendor update, installed: ${version}`
+      isAtLeast(version, CORE_MINIMUM_VERSION),
+      `${pkg} must be >= 12.6.3 per the vendor update, installed: ${version}`
     );
   }
 
